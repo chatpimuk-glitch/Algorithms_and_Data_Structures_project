@@ -22,6 +22,15 @@ class ListStack:
 
   def __len__(self):
     return len(self._s)
+def get_info(subject_info,command):
+    Name = subject_info['Name'].values[0]
+    Credit = subject_info['Credit'].values[0]
+    Lecturer = subject_info['Lecturer'].values[0]
+    if command == "add":
+        info = Name + " (" + Credit[0] + " credits) to " + Lecturer
+    elif command == "undo":
+        info = Name + " removed from " + Lecturer
+    return info
 
 Registered = ListStack()
 i = input()
@@ -32,14 +41,21 @@ while i != "process_all":
             target_code = command[1]
             subject_info = data[data['CourseCode'] == int(target_code)]
             if not subject_info.empty:
-                Name = subject_info['Name'].values[0]
-                Credit = subject_info['Credit'].values[0]
-                Type = subject_info['Type'].values[0]
-                Lecturer = subject_info['Lecturer'].values[0]
-                info = Name+" ("+Credit[0]+" credits) to "+Lecturer
+                info = get_info(subject_info,"add")
                 Registered.push(subject_info)
             print(f"Added : {info}")
-            print(Registered)
-    
+
+    elif len(command) == 1:
+        if command[0] == "undo":
+            
+            REVERTED = Registered.pop()
+            info = get_info(REVERTED, "undo")
+            print(f"REVERTED : {info}")
+
+        elif command[0] == "process_all":
+            pass
+
+
+
     i = input()
 
