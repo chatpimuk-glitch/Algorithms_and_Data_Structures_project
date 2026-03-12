@@ -1,5 +1,27 @@
-import pandas as pd
-data = pd.read_csv("CprE_Subject.csv",delimiter=",")
+import csv
+
+def build_hash_table(file_path):
+    hash_table = {}
+
+    with open(file_path, mode='r', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            code = row['CourseCode']
+
+            if code not in hash_table:
+                hash_table[code] = []
+
+            hash_table[code].append({
+                'Name': row['Name'],
+                'Type': row['Type'],
+                'Credit': row['Credit'],
+                'Semester': row['Semester'],
+                'Lecturer': row['Lecturer']
+            })
+    return hash_table
+
+
+
 class ListStack:
   def __init__(self):
     self._s = []
@@ -22,40 +44,29 @@ class ListStack:
 
   def __len__(self):
     return len(self._s)
-def get_info(subject_info,command):
-    Name = subject_info['Name'].values[0]
-    Credit = subject_info['Credit'].values[0]
-    Lecturer = subject_info['Lecturer'].values[0]
-    if command == "add":
-        info = Name + " (" + Credit[0] + " credits) to " + Lecturer
-    elif command == "undo":
-        info = Name + " removed from " + Lecturer
-    return info
 
+table = build_hash_table('CprE_Subject.csv')
 Registered = ListStack()
-i = input()
-while i != "process_all":
+
+while True:
+    i = input()
     command = i.split()
     if len(command) == 2:
         if command[0] == "add":
             target_code = command[1]
-            subject_info = data[data['CourseCode'] == int(target_code)]
-            if not subject_info.empty:
-                info = get_info(subject_info,"add")
-                Registered.push(subject_info)
-            print(f"Added : {info}")
+            if target_code in table:
+                subject = table[target_code][1]
+                Registered.push(subject)
+                print("Added:",subject['Name'],"("+subject['Credit'],"credits) to",subject['Lecturer'])
 
     elif len(command) == 1:
         if command[0] == "undo":
-            
-            REVERTED = Registered.pop()
-            info = get_info(REVERTED, "undo")
-            print(f"REVERTED : {info}")
-
-        elif command[0] == "process_all":
             pass
 
 
+        elif command[0] == "process_all":
+            print(Registered)
+            break
 
-    i = input()
+
 
