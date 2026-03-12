@@ -55,18 +55,22 @@ while True:
         if command[0] == "add":
             target_code = command[1]
             if target_code in table:
-                subject = table[target_code][1]
+                subject = table[target_code][0]
                 Registered.push(subject)
                 print("Added:",subject['Name'],"("+subject['Credit'],"credits) to",subject['Lecturer'])
+            else:
+                print("try again")
 
     elif len(command) == 1:
         if command[0] == "undo":
-            pass
+            REVERTED = Registered.pop()
+            print(REVERTED['Name'],"removed from", REVERTED['Lecturer'])
 
 
         elif command[0] == "process_all":
             print(Registered)
             break
 
-
+    else:
+        print("try again")
 
