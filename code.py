@@ -47,7 +47,7 @@ class ListStack:
 
 table = build_hash_table('CprE_Subject.csv')
 Registered = ListStack()
-
+n = 3
 while True:
     i = input()
     command = i.split()
@@ -58,14 +58,20 @@ while True:
                 subject = table[target_code][0]
                 Registered.push(subject)
                 print("Added:",subject['Name'],"("+subject['Credit'],"credits) to",subject['Lecturer'])
+                if n < 3 :
+                    n += 1
             else:
                 print("try again")
 
     elif len(command) == 1:
         if command[0] == "undo":
-            REVERTED = Registered.pop()
-            print(REVERTED['Name'],"removed from", REVERTED['Lecturer'])
-
+            if n > 0 :
+                REVERTED = Registered.pop()
+                print(REVERTED['Name'],"removed from", REVERTED['Lecturer'])
+                if n > 0:
+                    n -= 1
+            else:
+                print("can't undo")
 
         elif command[0] == "process_all":
             print(Registered)
