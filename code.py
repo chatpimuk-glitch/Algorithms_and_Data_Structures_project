@@ -20,7 +20,20 @@ def build_hash_table(file_path):
             })
     return hash_table
 
+def manual_sort_subjects(data_list):
+    n = len(data_list)
 
+    arr = list(data_list)
+
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            # แปลง Type เป็น: Sec=0, Lab=1
+            val_j = 0 if arr[j]['Type'] == 'Sec' else 1
+            val_next = 0 if arr[j + 1]['Type'] == 'Sec' else 1
+
+            if val_j > val_next:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    return arr
 
 class ListStack:
   def __init__(self):
@@ -74,7 +87,13 @@ while True:
                 print("can't undo")
 
         elif command[0] == "process_all":
-            print(Registered)
+            all_subjects = Registered._s
+
+            sorted_list = manual_sort_subjects(all_subjects)
+
+            print("--- Final Processed List ---")
+            for sub in sorted_list:
+                print(f"{sub['Name']} ({sub['Type']}) - {sub['Lecturer']}")
             break
 
     else:
