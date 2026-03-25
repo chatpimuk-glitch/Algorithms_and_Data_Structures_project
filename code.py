@@ -20,20 +20,35 @@ def build_hash_table(file_path):
             })
     return hash_table
 
+def merge(left, right):
+    sorted_arr = []
+    i = j = 0
+
+    while i < len(left) and j < len(right):
+        val_left = 0 if left[i]['Type'] == 'Sec' else 1
+        val_right = 0 if right[j]['Type'] == 'Sec' else 1
+
+        if val_left <= val_right:
+            sorted_arr.append(left[i])
+            i += 1
+        else:
+            sorted_arr.append(right[j])
+            j += 1
+
+    sorted_arr.extend(left[i:])
+    sorted_arr.extend(right[j:])
+
+    return sorted_arr
+
 def manual_sort_subjects(data_list):
-    n = len(data_list)
+    if len(data_list) <= 1:
+        return data_list
 
-    arr = list(data_list)
+    mid = len(data_list) // 2
+    left_half = manual_sort_subjects(data_list[:mid])
+    right_half = manual_sort_subjects(data_list[mid:])
 
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            # แปลง Type เป็น: Sec=0, Lab=1
-            val_j = 0 if arr[j]['Type'] == 'Sec' else 1
-            val_next = 0 if arr[j + 1]['Type'] == 'Sec' else 1
-
-            if val_j > val_next:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
-    return arr
+    return merge(left_half, right_half)
 
 class ListStack:
   def __init__(self):
@@ -98,4 +113,3 @@ while True:
 
     else:
         print("try again")
-
